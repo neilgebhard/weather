@@ -1,3 +1,3 @@
 # weather
 A vanilla weather web app<br>
-[Demo](neilgebhard.github.io/weather)
+[Demo](http://neilgebhard.github.io/weather)
