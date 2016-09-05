@@ -2,29 +2,66 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="nowidth=device-width, initial-scale=1">
-    <title>Weather App</title>
-    <link rel='shortcut icon' href='favicon.ico' type='image/x-icon'/ >
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css"></link>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A vanilla weather app">
+    <meta name="author" content="Neil Gebhard">
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="ie10-viewport-bug-workaround.css" rel="stylesheet">
+    <link href="weather.css" rel="stylesheet">
+    <script src="ie-emulation-modes-warning.js"></script>
 </head>
 
-<body class="container text-center">
-    <h3>Weather App</h3>
-    <h1 id="temperature"></h1>
-    <h1 id="city"></h1>
-    <p>
-        <span>By Neil Gebhard</span>
-        <a href="https://github.com/neilgebhard"><i class="fa fa-github-alt" aria-hidden="true"></i></a>
-        <a href="mailto:neilgebhard@gmail.com"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>
-        <a href="https://twitter.com/judobaseball"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-        <a href="https://www.linkedin.com/in/neil-gebhard-3a72068a"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
-    </p>
-    <script src="https://use.fontawesome.com/699e05797e.js"></script>
-    <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
-    <script src="index.js"></script>
+<body>
+    <div class="site-wrapper">
+        <div class="site-wrapper-inner">
+            <div class="cover-container">
+                <div class="masthead clearfix">
+                    <div class="inner">
+                        <h3 class="masthead-brand">Weather</h3>
+                        <nav>
+                            <ul class="nav masthead-nav">
+                                <li><a href="https://neilgebhard.github.io">Github</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="inner cover">
+                    <h1 id="temperature" class="cover-heading">Loading...</h1>
+                    <p id="description" class="lead"></p>
+                    <p id="city" class="lead"></p>
+                </div>
+                <div class="mastfoot">
+                    <div class="inner">
+                        <p><a href="http://neilgebhard.github.io">Neil Gebhard</a> 2016</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script src="ie10-viewport-bug-workaround.js"></script>
+    <script>
+    $(document).ready(function() {
+        $.ajax({
+            url: 'http://ipinfo.io/json',
+            dataType: 'json'
+        }).then(function(ipInfo) {
+            window.ipInfo = ipInfo;
+            var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + ipInfo.city + ',' + ipInfo.country + '&appid=abb9e6ace1e089c58976438ae892c89c&units=imperial';
+            return $.ajax({
+                url: url,
+                dataType: 'json'
+            });
+        }).done(function(weather) {
+            document.getElementById('temperature').innerHTML = weather.main.temp + ' &#x2109;';
+            document.getElementById('city').innerHTML = ipInfo.city + ', ' + ipInfo.region + ', ' + ipInfo.country;
+            document.getElementById('description').innerHTML = weather.weather[0].description;
+        });
+    });
+    </script>
 </body>
 
 </html>
